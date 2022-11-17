@@ -8,6 +8,14 @@ import java.time.temporal.ChronoUnit;
  * Description : A repetitive Event
  */
 public class RepetitiveEvent extends Event {
+
+    //The frenquency of the event
+    private ChronoUnit frequency;
+
+    //The exceptionList
+    private Set<LocalDate> exceptionlist = new HashSet<>();
+
+
     /**
      * Constructs a repetitive event
      *
@@ -23,8 +31,7 @@ public class RepetitiveEvent extends Event {
      */
     public RepetitiveEvent(String title, LocalDateTime start, Duration duration, ChronoUnit frequency) {
         super(title, start, duration);
-        // TODO : implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        this.frequency = frequency;
     }
 
     /**
@@ -33,8 +40,11 @@ public class RepetitiveEvent extends Event {
      * @param date the event will not occur at this date
      */
     public void addException(LocalDate date) {
-        // TODO : implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        exceptionlist.add(date);
+    }
+
+    public Set<LocalDate> getException(){
+        return exceptionlist;
     }
 
     /**
@@ -42,8 +52,22 @@ public class RepetitiveEvent extends Event {
      * @return the type of repetition
      */
     public ChronoUnit getFrequency() {
-        // TODO : implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");    
+        return this.frequency;
     }
 
+    @Override
+    public boolean isInDay(LocalDate aDay) {
+        if(!(aDay.isBefore(this.getStart().toLocalDate()) || aDay.isAfter(this.getStart().plus(this.getDuration()).toLocalDate())))return true;
+        LocalDateTime temp = this.getStart();
+        while((temp.isBefore(aDay.atStartOfDay()))){
+            temp = temp.plus(getFrequency().getDuration());
+            LocalDate temp2 = temp.toLocalDate();
+            boolean bool1 = aDay.isBefore(temp.toLocalDate());
+            boolean bool2 = aDay.isAfter(temp.plus(this.getDuration()).toLocalDate());
+            if (!(aDay.isBefore(temp.toLocalDate()) || aDay.isAfter(temp.plus(this.getDuration()).toLocalDate()))) {
+                if(!getException().contains(aDay)) return true;
+            }
+        }
+        return false;
+    }
 }
