@@ -61,9 +61,6 @@ public class RepetitiveEvent extends Event {
         LocalDateTime temp = this.getStart();
         while((temp.isBefore(aDay.atStartOfDay()))){
             temp = temp.plus(getFrequency().getDuration());
-            LocalDate temp2 = temp.toLocalDate();
-            boolean bool1 = aDay.isBefore(temp.toLocalDate());
-            boolean bool2 = aDay.isAfter(temp.plus(this.getDuration()).toLocalDate());
             if (!(aDay.isBefore(temp.toLocalDate()) || aDay.isAfter(temp.plus(this.getDuration()).toLocalDate()))) {
                 if(!getException().contains(aDay)) return true;
             }
